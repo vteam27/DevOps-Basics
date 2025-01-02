@@ -20,8 +20,9 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '17'
+        distribution: 'temurin'
 
     - name: Compile and Run App
       run: |
-        javac app.java
-        java app
+        javac App.java
+        java App
