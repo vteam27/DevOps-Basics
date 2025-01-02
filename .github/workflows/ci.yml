@@ -24,5 +24,6 @@ jobs:
 
     - name: Compile and Run App
       run: |
+        ls -la
         javac App.java
         java App
