@@ -1,4 +1,4 @@
-name: Java CI
+name: Java CI with Tests
 
 on:
   push:
@@ -13,17 +13,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up JDK
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
 
-    - name: Compile and Run App
-      run: |
-        ls -la
-        javac App.java
-        java App
+      - name: Compile Java Program
+        run: javac -cp .:junit-platform-console-standalone-1.10.0.jar App.java AppTest.java
+
+      - name: Run Unit Tests
+        run: java -jar junit-platform-console-standalone-1.10.0.jar --class-path . --scan-class-path
