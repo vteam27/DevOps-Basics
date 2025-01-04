@@ -1,4 +1,4 @@
-name: Java CI with Tests
+name: Java CI with Tests and Coverage
 
 on:
   push:
@@ -23,7 +23,20 @@ jobs:
           java-version: '17'
 
       - name: Compile Java Program
-        run: javac -cp .:junit-platform-console-standalone-1.10.0.jar App.java AppTest.java
+        run: |
+          mkdir -p classes
+          javac -cp .:junit-platform-console-standalone-1.10.0.jar -d classes App.java AppTest.java
 
-      - name: Run Unit Tests
-        run: java -jar junit-platform-console-standalone-1.10.0.jar --class-path . --scan-class-path
+      - name: Run Tests with Coverage
+        run: |
+          java -javaagent:jacocoagent.jar=destfile=jacoco.exec,output=file -cp classes:junit-platform-console-standalone-1.10.0.jar org.junit.platform.console.ConsoleLauncher --scan-class-path
+
+      - name: Generate Coverage Report
+        run: |
+          java -jar jacococli.jar report jacoco.exec --classfiles classes --sourcefiles . --html coverage-report
+
+      - name: Upload Coverage Report as Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage-report
